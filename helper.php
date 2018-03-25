@@ -72,3 +72,28 @@ if( !function_exists('dump_sql') )
         dump(DB::getQueryLog());
     }
 }
+
+if( !function_exists('curl') )
+{
+    function curl ($url, Array $data=[], int $post=1, int $header=0)
+    {
+        // 拼接请求地址
+        $url = $post ? $url : $url.'?'.http_build_query($data);
+        // 初始化
+        $ch = curl_init();
+        // 设置抓取的url
+        curl_setopt($ch, CURLOPT_URL, $url);
+        // 设置头文件的信息作为数据流输出
+        curl_setopt($ch, CURLOPT_HEADER, $header);
+        // 设置获取的信息以文件流的形式返回，而不是直接输出。
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        // 设置post方式提交、设置post数据
+        $post && curl_setopt($ch, CURLOPT_POST, 1) && curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        // 执行
+        $data = curl_exec($ch);
+        // 关闭URL请求
+        curl_close($ch);
+        // 显示获得的数据
+        return $data;
+    }
+}
